@@ -43,8 +43,15 @@ public class EasyPoiController {
     public String impExcel(@RequestBody @RequestParam("file") MultipartFile file){
 
         try {
-            List<EasyPoiEntity> easyPoiEntities = ExcelUtils.importExcel(file, EasyPoiEntity.class);
-            service.save(easyPoiEntities);
+
+            String fileName = file.getOriginalFilename();
+            String subName = fileName.substring(fileName.lastIndexOf("."));
+            if(subName.equalsIgnoreCase(".xls") || subName.equalsIgnoreCase(".xlsx")){
+                List<EasyPoiEntity> easyPoiEntities = ExcelUtils.importExcel(file, EasyPoiEntity.class);
+                service.save(easyPoiEntities);
+            }else {
+             return "文件格式错误";
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
